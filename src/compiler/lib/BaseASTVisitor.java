@@ -37,8 +37,7 @@ public class BaseASTVisitor<S,E extends Exception> {
 			indent = (indent == null) ? "" : indent + "  ";
 			indent+=mark; //inserts mark
 			try {
-				S result = visitByAcc(v);
-				return result;
+				return visitByAcc(v);
 			} finally { indent = temp; }
 		} else
 			return visitByAcc(v);
@@ -67,18 +66,18 @@ public class BaseASTVisitor<S,E extends Exception> {
 	public S visitNode(BoolTypeNode n) throws E {throw new UnimplException();}
 	public S visitNode(IntTypeNode n) throws E {throw new UnimplException();}
 
-////	 OPERATOR EXTENSION
-//
-//	public S visitNode(GreaterEqualNode n) throws E {throw new UnimplException();}
-//	public S visitNode(LessEqualNode n) throws E {throw new UnimplException();}
-//	public S visitNode(NotNode n) throws E {throw new UnimplException();}
-//	public S visitNode(MinusNode n) throws E {throw new UnimplException();}
-//	public S visitNode(OrNode n) throws E {throw new UnimplException();}
-//	public S visitNode(DivNode n) throws E {throw new UnimplException();}
-//	public S visitNode(AndNode n) throws E {throw new UnimplException();}
-//
-////	 OBJECT-ORIENTED EXTENSION
-//
+	// OPERATOR EXTENSION
+
+	public S visitNode(GreaterEqualNode n) throws E {throw new UnimplException();}
+	public S visitNode(LessEqualNode n) throws E {throw new UnimplException();}
+	public S visitNode(NotNode n) throws E {throw new UnimplException();}
+	public S visitNode(MinusNode n) throws E {throw new UnimplException();}
+	public S visitNode(DivNode n) throws E {throw new UnimplException();}
+	public S visitNode(OrNode n) throws E {throw new UnimplException();}
+	public S visitNode(AndNode n) throws E {throw new UnimplException();}
+
+	// OBJECT-ORIENTED EXTENSION
+
 //	public S visitNode(ClassNode n) throws E {throw new UnimplException();}
 //	public S visitNode(FieldNode node) throws E {throw new UnimplException();}
 //	public S visitNode(MethodNode n) throws E {throw new UnimplException();}
