@@ -205,7 +205,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
         );
     }
 
-	// x >= y
+    // x >= y
     @Override
     public String visitNode(GreaterEqualNode n) throws VoidException {
         if (print) printNode(n);
@@ -220,8 +220,8 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
                 l1 + ":",
                 "push 1",
                 l2 + ":"
-        ); // non avendo bge, inverto i due operandi con la ble
-		// x >= y equivale a y <= x
+        ); // non avendo bge, inverto i due operandi e utilizzo la ble
+        // x >= y equivale a y <= x
         // confronto l'operando di destra con quello di sinistra
         // se l'operando di destra è minore o uguale allora salto a l1
         // e faccio push 1, altrimenti faccio push 0 e salto a l2
@@ -230,18 +230,18 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
     @Override
     public String visitNode(LessEqualNode n) throws VoidException {
         if (print) printNode(n);
-		String l1 = freshLabel();
-		String l2 = freshLabel();
-		return nlJoin(
-				visit(n.left),
-				visit(n.right),
-				"bleq " + l1,
-				"push 0",
-				"b " + l2,
-				l1 + ":",
-				"push 1",
-				l2 + ":"
-		); // confronto l'operando di sinistra con quello di destra
+        String l1 = freshLabel();
+        String l2 = freshLabel();
+        return nlJoin(
+                visit(n.left),
+                visit(n.right),
+                "bleq " + l1,
+                "push 0",
+                "b " + l2,
+                l1 + ":",
+                "push 1",
+                l2 + ":"
+        ); // confronto l'operando di sinistra con quello di destra
         // se l'operando di sinistra è minore o uguale allora salto a l1
         // e faccio push 1, altrimenti faccio push 0 e salto a l2
     }
@@ -249,20 +249,20 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
     @Override
     public String visitNode(NotNode n) throws VoidException {
         if (print) printNode(n);
-		String l1 = freshLabel();
-		String l2 = freshLabel();
-		return nlJoin(
-				visit(n.exp),
-				"push 1",
-				"beq " + l1,
-				"push 0",
-				"b " + l2,
-				l1 + ":",
-				"push 1",
-				l2 + ":"
-		); // se l'exp è 0 push 1, altrimenti push 0
-		// inverto il valore in quanto il not è 1 se l'exp è 0 e 0 se l'exp è 1
-	}
+        String l1 = freshLabel();
+        String l2 = freshLabel();
+        return nlJoin(
+                visit(n.exp),
+                "push 1",
+                "beq " + l1,
+                "push 0",
+                "b " + l2,
+                l1 + ":",
+                "push 1",
+                l2 + ":"
+        ); // se l'exp è 0 push 1, altrimenti push 0
+        // inverto il valore in quanto il not è 1 se l'exp è 0 e 0 se l'exp è 1
+    }
 
     @Override
     public String visitNode(OrNode n) throws VoidException {
