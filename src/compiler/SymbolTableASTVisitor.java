@@ -7,7 +7,7 @@ import compiler.lib.*;
 
 public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 	
-	private List<Map<String, STentry>> symTable = new ArrayList<>();
+	private final List<Map<String, STentry>> symTable = new ArrayList<>();
 	private int nestingLevel=0; // current nesting level
 	private int decOffset=-2; // counter for offset of local declarations at current nesting level 
 	int stErrors=0;
@@ -166,6 +166,64 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 	@Override
 	public Void visitNode(IntNode n) {
 		if (print) printNode(n, n.val.toString());
+		return null;
+	}
+
+	// OPERATOR EXTENSION
+
+	@Override
+	public Void visitNode(MinusNode n) throws VoidException {
+		if (print) printNode(n);
+		visit(n.left);
+		visit(n.right);
+		return null;
+	}
+
+	@Override
+	public Void visitNode(DivNode n) throws VoidException {
+		if (print) printNode(n);
+		visit(n.left);
+		visit(n.right);
+		return null;
+	}
+
+	@Override
+	public Void visitNode(GreaterEqualNode n) throws VoidException {
+		if (print) printNode(n);
+		visit(n.left);
+		visit(n.right);
+		return null;
+	}
+
+	@Override
+	public Void visitNode(LessEqualNode n) throws VoidException {
+		if (print) printNode(n);
+		visit(n.left);
+		visit(n.right);
+		return null;
+	}
+
+	@Override
+	public Void visitNode(NotNode n) throws VoidException {
+		if (print) printNode(n);
+		visit(n.exp);
+		return null;
+	}
+
+
+	@Override
+	public Void visitNode(OrNode n) throws VoidException {
+		if (print) printNode(n);
+		visit(n.left);
+		visit(n.right);
+		return null;
+	}
+
+	@Override
+	public Void visitNode(AndNode n) throws VoidException {
+		if (print) printNode(n);
+		visit(n.left);
+		visit(n.right);
 		return null;
 	}
 }
