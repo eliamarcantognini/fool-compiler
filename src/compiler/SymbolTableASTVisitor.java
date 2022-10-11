@@ -227,6 +227,8 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 		return null;
 	}
 
+	// OOP EXTENSION
+
 	@Override
 	public Void visitNode(ClassNode n) throws VoidException {
 		if (print) printNode(n);
