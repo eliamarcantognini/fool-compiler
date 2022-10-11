@@ -241,4 +241,30 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
         n.setLine(c.NOT().getSymbol().getLine());
         return n;
     }
+
+    // OOP EXTENSION
+
+    @Override
+    public Node visitNew(NewContext ctx) {
+        if (print) printVarAndProdName(ctx);
+        return super.visitNew(ctx);
+    }
+
+    @Override
+    public Node visitNull(NullContext ctx) {
+        if (print) printVarAndProdName(ctx);
+        return super.visitNull(ctx);
+    }
+
+    @Override
+    public Node visitDotCall(DotCallContext ctx) {
+        if (print) printVarAndProdName(ctx);
+        return super.visitDotCall(ctx);
+    }
+
+    @Override
+    public Node visitIdType(IdTypeContext ctx) {
+        if (print) printVarAndProdName(ctx);
+        return super.visitIdType(ctx);
+    }
 }
