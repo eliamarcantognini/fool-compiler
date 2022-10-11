@@ -241,4 +241,67 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode,TypeException
 			throw new TypeException("Non boolean in and", n.getLine());
 		return new BoolTypeNode();
 	}
+
+	// OOP EXTENSION
+
+
+	@Override
+	public TypeNode visitNode(ClassNode n) throws TypeException {
+		// TODO.
+		return super.visitNode(n);
+	}
+
+	@Override
+	public TypeNode visitNode(FieldNode node) throws TypeException {
+		// TODO.
+		return super.visitNode(node);
+	}
+
+	@Override
+	public TypeNode visitNode(MethodNode n) throws TypeException {
+		// TODO.
+		return super.visitNode(n);
+	}
+
+	@Override
+	public TypeNode visitNode(ClassCallNode node) throws TypeException {
+		// TODO.
+		return super.visitNode(node);
+	}
+
+	@Override
+	public TypeNode visitNode(NewNode n) throws TypeException {
+		// TODO.
+		return super.visitNode(n);
+	}
+
+	@Override
+	public TypeNode visitNode(EmptyNode n) throws TypeException {
+		// TODO.
+		return super.visitNode(n);
+	}
+
+	@Override
+	public TypeNode visitNode(ClassTypeNode n) throws TypeException {
+		// TODO.
+		return super.visitNode(n);
+	}
+
+	@Override
+	public TypeNode visitNode(MethodTypeNode n) throws TypeException {
+		// TODO.
+		return super.visitNode(n);
+	}
+
+	@Override
+	public TypeNode visitNode(RefTypeNode n) throws TypeException {
+		// TODO.
+		return super.visitNode(n);
+	}
+
+	@Override
+	public TypeNode visitNode(EmptyTypeNode n) throws TypeException {
+		// TODO.
+		return super.visitNode(n);
+	}
 }
