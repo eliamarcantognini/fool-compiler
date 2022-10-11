@@ -308,4 +308,46 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
         // altrimenti proseguo analizzando l'operando di destra, se l'operando di destra è 0 vado a l1 e pusho 0
         // altrimenti vuol dire che entrambi left e right sono true quindi pusho 1 e vado a l2
     }
+
+    @Override
+    public String visitNode(ClassNode n) throws VoidException {
+        if (print) printNode(n);
+        // TODO.
+        return super.visitNode(n);
+    }
+
+    @Override
+    public String visitNode(FieldNode node) throws VoidException {
+        if (print) printNode(node);
+        // TODO.
+        return super.visitNode(node);
+    }
+
+    @Override
+    public String visitNode(MethodNode n) throws VoidException {
+        if (print) printNode(n);
+        // TODO.
+        return super.visitNode(n);
+    }
+
+    @Override
+    public String visitNode(ClassCallNode node) throws VoidException {
+        if (print) printNode(node);
+        // TODO.
+        return super.visitNode(node);
+    }
+
+    @Override
+    public String visitNode(NewNode n) throws VoidException {
+        if (print) printNode(n);
+        // TODO.
+        return super.visitNode(n);
+    }
+
+    @Override
+    public String visitNode(EmptyNode n) throws VoidException {
+        if (print) printNode(n);
+        // TODO.
+        return super.visitNode(n);
+    }
 }
