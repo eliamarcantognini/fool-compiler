@@ -200,4 +200,57 @@ public class PrintEASTVisitor extends BaseEASTVisitor<Void,VoidException> {
 		visit(n.right);
 		return null;
 	}
+
+	// OOP EXTENSION
+
+
+	@Override
+	public Void visitNode(ClassNode n) throws VoidException {
+		return super.visitNode(n);
+	}
+
+	@Override
+	public Void visitNode(FieldNode node) throws VoidException {
+		return super.visitNode(node);
+	}
+
+	@Override
+	public Void visitNode(MethodNode n) throws VoidException {
+		return super.visitNode(n);
+	}
+
+	@Override
+	public Void visitNode(ClassCallNode node) throws VoidException {
+		return super.visitNode(node);
+	}
+
+	@Override
+	public Void visitNode(NewNode n) throws VoidException {
+		return super.visitNode(n);
+	}
+
+	@Override
+	public Void visitNode(EmptyNode n) throws VoidException {
+		return super.visitNode(n);
+	}
+
+	@Override
+	public Void visitNode(ClassTypeNode n) throws VoidException {
+		return super.visitNode(n);
+	}
+
+	@Override
+	public Void visitNode(MethodTypeNode n) throws VoidException {
+		return super.visitNode(n);
+	}
+
+	@Override
+	public Void visitNode(RefTypeNode n) throws VoidException {
+		return super.visitNode(n);
+	}
+
+	@Override
+	public Void visitNode(EmptyTypeNode n) throws VoidException {
+		return super.visitNode(n);
+	}
 }
