@@ -231,36 +231,42 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 
 	@Override
 	public Void visitNode(ClassNode n) throws VoidException {
+		// TODO.
 		if (print) printNode(n);
 		return super.visitNode(n);
 	}
 
 	@Override
 	public Void visitNode(FieldNode n) throws VoidException {
+		// TODO.
 		if (print) printNode(n);
 		return super.visitNode(n);
 	}
 
 	@Override
 	public Void visitNode(MethodNode n) throws VoidException {
+		// TODO.
 		if (print) printNode(n);
 		return super.visitNode(n);
 	}
 
 	@Override
 	public Void visitNode(ClassCallNode n) throws VoidException {
+		// TODO.
 		if (print) printNode(n);
 		return super.visitNode(n);
 	}
 
 	@Override
 	public Void visitNode(NewNode n) throws VoidException {
+		// TODO.
 		if (print) printNode(n);
 		return super.visitNode(n);
 	}
 
 	@Override
 	public Void visitNode(EmptyNode n) throws VoidException {
+		// TODO.
 		if (print) printNode(n);
 		return super.visitNode(n);
 	}

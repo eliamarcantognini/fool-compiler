@@ -371,6 +371,7 @@ public class AST {
 
     // Class Node Class
     public static class ClassNode extends Node {
+        // TODO.
         final String id;
         final List<Node> fieldList;
         final List<Node> methodList;
@@ -389,6 +390,7 @@ public class AST {
 
     // Field Node Class
     public static class FieldNode extends Node {
+        // TODO.
         final String id;
         final TypeNode type;
 
@@ -405,6 +407,7 @@ public class AST {
 
     // Method Node Class
     public static class MethodNode extends Node {
+        // TODO.
         final String id;
         final List<Node> parList;
         final TypeNode type;
@@ -425,6 +428,7 @@ public class AST {
 
     // Class Call Node Class
     public static class ClassCallNode extends Node {
+        // TODO.
         final String id;
         final String methodId;
         final List<Node> expList;
@@ -443,6 +447,7 @@ public class AST {
 
     // New Node Class
     public static class NewNode extends Node {
+        // TODO.
         final String id;
 
         public NewNode(String id) {
@@ -457,6 +462,7 @@ public class AST {
 
     // Empty Node Class
     public static class EmptyNode extends Node {
+        // TODO.
 
         @Override
         public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
@@ -466,6 +472,7 @@ public class AST {
 
     // Class Type Node Class
     public static class ClassTypeNode extends TypeNode {
+        // TODO.
         final String id;
 
         public ClassTypeNode(String id) {
@@ -480,6 +487,7 @@ public class AST {
 
     // Method Type Node Class
     public static class MethodTypeNode extends TypeNode {
+        // TODO.
         final String id;
         final List<TypeNode> parList;
         final TypeNode type;
@@ -498,6 +506,7 @@ public class AST {
 
     // Ref Type Node Class
     public static class RefTypeNode extends TypeNode {
+        // TODO.
         final TypeNode type;
 
         public RefTypeNode(TypeNode type) {
@@ -512,6 +521,7 @@ public class AST {
 
     // Empty Type Node Class
     public static class EmptyTypeNode extends TypeNode {
+        // TODO.
 
         @Override
         public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
