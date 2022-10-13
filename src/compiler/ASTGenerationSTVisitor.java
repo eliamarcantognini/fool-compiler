@@ -244,31 +244,55 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 
     // OOP EXTENSION
 
+
+    @Override
+    public Node visitCldec(CldecContext ctx) {
+        // TODO.
+        return super.visitCldec(ctx);
+    }
+
+    @Override
+    public Node visitMethdec(MethdecContext ctx) {
+        // TODO.
+        return super.visitMethdec(ctx);
+    }
+
     @Override
     public Node visitNew(NewContext ctx) {
         if (print) printVarAndProdName(ctx);
-        // TODO.
+
+        var argList = new ArrayList<Node>(); // list of arguments
+        for (var arg : ctx.exp()) argList.add(visit(arg)); // visit each argument
+        var n = new NewNode(ctx.ID().getText(), argList); // create new node
+        n.setLine(ctx.ID().getSymbol().getLine()); // set line
+
         return super.visitNew(ctx);
     }
 
     @Override
     public Node visitNull(NullContext ctx) {
         if (print) printVarAndProdName(ctx);
-        // TODO.
-        return super.visitNull(ctx);
+        var n = new EmptyNode();
+        n.setLine(ctx.NULL().getSymbol().getLine());
+        return n;
     }
 
     @Override
     public Node visitDotCall(DotCallContext ctx) {
         if (print) printVarAndProdName(ctx);
-        // TODO.
-        return super.visitDotCall(ctx);
+        var argList = new ArrayList<Node>(); // list of arguments
+        for (var arg : ctx.exp()) argList.add(visit(arg)); // visit each argument and populate list
+        var n = new ClassCallNode(ctx.ID(0).getText(), ctx.ID(1).getText(), argList); // create new node
+        n.setLine(ctx.ID(0).getSymbol().getLine()); // set line
+        return n;
     }
 
     @Override
     public Node visitIdType(IdTypeContext ctx) {
         if (print) printVarAndProdName(ctx);
-        // TODO.
-        return super.visitIdType(ctx);
+
+        var n = new RefTypeNode(ctx.ID().getText());
+        n.setLine(ctx.ID().getSymbol().getLine());
+        return n;
     }
 }
