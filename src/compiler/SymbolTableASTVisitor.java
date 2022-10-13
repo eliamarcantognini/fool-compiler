@@ -15,7 +15,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
 
     private final List<Map<String, STentry>> symTable = new ArrayList<>();
     // Class Table map every class name to its virtual table
-    private Map<String, Map<String, STentry>> classTable = new HashMap<>();
+    private final Map<String, Map<String, STentry>> classTable = new HashMap<>();
 
     private int nestingLevel = 0; // current nesting level
     private int decOffset = -2; // counter for offset of local declarations at current nesting level
@@ -261,9 +261,29 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
 
     @Override
     public Void visitNode(ClassCallNode n) throws VoidException {
-        // TODO.
         if (print) printNode(n);
-        return super.visitNode(n);
+        var entry = stLookup(n.objectId); // object must be in the symbol table
+        if (entry == null) {
+            System.out.println("Object id " + n.objectId + " at line " + n.getLine() + " not declared");
+            stErrors++;
+        } else {
+            if (entry.type instanceof RefTypeNode) {
+                var objectClassId = ((RefTypeNode) entry.type).id;
+                var methodEntry = classTable.get(objectClassId).get(n.methodId); // method must be in the class table
+                if (methodEntry == null) {
+                    System.out.println("Method id " + n.methodId + " at line " + n.getLine() + " not declared");
+                    stErrors++;
+                } else {
+                    n.entry = entry;
+                    n.methodEntry = methodEntry;
+                    n.nl = nestingLevel;
+                }
+            } else {
+                System.out.println("Object id " + n.objectId + " at line " + n.getLine() + " is not a class");
+                stErrors++;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -289,4 +309,5 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
         if (print) printNode(n);
         return null;
     }
+
 }
