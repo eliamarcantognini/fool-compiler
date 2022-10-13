@@ -436,16 +436,16 @@ public class AST {
     public static class ClassCallNode extends Node {
 
         // call: ID1.ID2()
-        final String classId; // (ID1) - id of the class
+        final String objectId; // (ID1) - id of the class
         final String methodId; // (ID2) - id of the class method to be called
         final List<Node> argList;
 
-        STentry classEntry; // the object entry (ID1)
+        STentry entry; // the object entry (ID1)
         STentry methodEntry; // the method entry (ID2)
         int nl;
 
-        public ClassCallNode(String classId, String methodId, List<Node> argList) {
-            this.classId = classId;
+        public ClassCallNode(String objectId, String methodId, List<Node> argList) {
+            this.objectId = objectId;
             this.methodId = methodId;
             this.argList = argList;
         }
