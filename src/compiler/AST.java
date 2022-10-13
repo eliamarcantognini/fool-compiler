@@ -5,7 +5,6 @@ import compiler.lib.DecNode;
 import compiler.lib.Node;
 import compiler.lib.TypeNode;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -373,15 +372,18 @@ public class AST {
 
     // Class Node Class
     public static class ClassNode extends DecNode {
-        // TODO.
         final String id;
-        final List<Node> fieldList;
-        final List<Node> methodList;
+        final String superId;
+        final List<FieldNode> fieldList;
+        final List<MethodNode> methodList;
+        ClassTypeNode type;
+        STentry superEntry;
 
-        public ClassNode(String id, List<Node> fieldList, List<Node> methodList) {
+        public ClassNode(String id, String superId, List<FieldNode> fieldList, List<MethodNode> methodList) {
             this.id = id;
-            this.fieldList = fieldList;
-            this.methodList = methodList;
+            this.superId = superId;
+            this.fieldList = Collections.unmodifiableList(fieldList);
+            this.methodList = Collections.unmodifiableList(methodList);
         }
 
         @Override
@@ -392,9 +394,8 @@ public class AST {
 
     // Field Node Class
     public static class FieldNode extends DecNode {
-        // TODO.
         final String id;
-        final TypeNode type;
+        int offset;
 
         public FieldNode(String id, TypeNode type) {
             this.id = id;
@@ -409,16 +410,19 @@ public class AST {
 
     // Method Node Class
     public static class MethodNode extends DecNode {
-        // TODO.
         final String id;
-        final List<Node> parList;
-        final TypeNode type;
+        final TypeNode retType; // return type
+        final List<ParNode> parList; // list of parameters
+        final List<DecNode> decList; // list of declarations
         final Node exp;
+        int offset;
+        String label = "";
 
-        public MethodNode(String id, List<Node> parList, TypeNode type, Node exp) {
+        public MethodNode(String id, TypeNode retType, List<ParNode> parList, List<DecNode> decList, Node exp) {
             this.id = id;
-            this.parList = parList;
-            this.type = type;
+            this.retType = retType;
+            this.parList = Collections.unmodifiableList(parList);
+            this.decList = Collections.unmodifiableList(decList);
             this.exp = exp;
         }
 
@@ -430,15 +434,20 @@ public class AST {
 
     // Class Call Node Class
     public static class ClassCallNode extends Node {
-        // TODO.
-        final String id;
-        final String methodId;
-        final List<Node> expList;
 
-        public ClassCallNode(String id, String methodId, List<Node> expList) {
-            this.id = id;
+        // call: ID1.ID2()
+        final String classId; // (ID1) - id of the class
+        final String methodId; // (ID2) - id of the class method to be called
+        final List<Node> argList;
+
+        STentry classEntry; // the object entry (ID1)
+        STentry methodEntry; // the method entry (ID2)
+        int n1;
+
+        public ClassCallNode(String classId, String methodId, List<Node> argList) {
+            this.classId = classId;
             this.methodId = methodId;
-            this.expList = expList;
+            this.argList = argList;
         }
 
         @Override
@@ -449,11 +458,13 @@ public class AST {
 
     // New Node Class
     public static class NewNode extends Node {
-        // TODO.
         final String id;
+        final List<Node> argList;
+        STentry entry;
 
-        public NewNode(String id) {
+        public NewNode(String id, List<Node> argList) {
             this.id = id;
+            this.argList = argList;
         }
 
         @Override
@@ -472,9 +483,11 @@ public class AST {
 
     // Class Type Node Class
     public static class ClassTypeNode extends TypeNode {
+        // It's a class type. It stores all the information about the class.
+        // Including the fields' and methods' types (the intherited ones, too)
 
-        final ArrayList<ArrowTypeNode> allMethods;
-        final ArrayList<TypeNode> allFields;
+        final ArrayList<ArrowTypeNode> allMethods; // all methods in the class
+        final ArrayList<TypeNode> allFields; // all fields in the class
 
         public ClassTypeNode(ArrayList<ArrowTypeNode> allMethods, ArrayList<TypeNode> allFields) {
             this.allMethods = allMethods;
@@ -490,7 +503,10 @@ public class AST {
 
     // Method Type Node Class
     public static class MethodTypeNode extends TypeNode {
-        final ArrowTypeNode fun;
+        // A wrapper class for ArrowTypeNode. It's used to store the method type in the class type.
+        // Useful to understand if we have a method call or a function call.
+
+        final ArrowTypeNode fun; // the method with all the information about it
 
         public MethodTypeNode(ArrowTypeNode fun) {
             this.fun = fun;
@@ -504,7 +520,8 @@ public class AST {
 
     // Ref Type Node Class
     public static class RefTypeNode extends TypeNode {
-        final String id;
+
+        final String id; // the id of the class
 
         public RefTypeNode(String id) {
             this.id = id;
