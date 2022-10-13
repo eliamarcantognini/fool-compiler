@@ -247,14 +247,30 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 
     @Override
     public Node visitCldec(CldecContext ctx) {
-        // TODO.
+
         return super.visitCldec(ctx);
     }
 
     @Override
     public Node visitMethdec(MethdecContext ctx) {
-        // TODO.
-        return super.visitMethdec(ctx);
+        if (print) printVarAndProdName(ctx);
+        // visit parameters and add them to parlist
+        var parList = new ArrayList<ParNode>();
+        for (int i = 1; i < ctx.ID().size(); i++) {
+            var p = new ParNode(ctx.ID(i).getText(), (TypeNode) visit(ctx.type(i)));
+            p.setLine(ctx.ID(i).getSymbol().getLine());
+            parList.add(p);
+        }
+        // visit declarations and add them to declist
+        var decList = new ArrayList<DecNode>();
+        for (var dec : ctx.dec()) decList.add((DecNode) visit(dec));
+
+        Node n = null;
+        if (ctx.ID().size() > 0){
+            n = new MethodNode(ctx.ID(0).getText(), (TypeNode) visit(ctx.type(0)), parList, decList, visit(ctx.exp()));
+            n.setLine(ctx.ID(0).getSymbol().getLine());
+        }
+        return n;
     }
 
     @Override
