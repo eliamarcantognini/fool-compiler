@@ -442,7 +442,7 @@ public class AST {
 
         STentry classEntry; // the object entry (ID1)
         STentry methodEntry; // the method entry (ID2)
-        int n1;
+        int nl;
 
         public ClassCallNode(String classId, String methodId, List<Node> argList) {
             this.classId = classId;
