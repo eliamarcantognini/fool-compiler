@@ -5,6 +5,8 @@ import compiler.lib.DecNode;
 import compiler.lib.Node;
 import compiler.lib.TypeNode;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -370,7 +372,7 @@ public class AST {
     // OOP Extension
 
     // Class Node Class
-    public static class ClassNode extends Node {
+    public static class ClassNode extends DecNode {
         // TODO.
         final String id;
         final List<Node> fieldList;
@@ -389,7 +391,7 @@ public class AST {
     }
 
     // Field Node Class
-    public static class FieldNode extends Node {
+    public static class FieldNode extends DecNode {
         // TODO.
         final String id;
         final TypeNode type;
@@ -406,7 +408,7 @@ public class AST {
     }
 
     // Method Node Class
-    public static class MethodNode extends Node {
+    public static class MethodNode extends DecNode {
         // TODO.
         final String id;
         final List<Node> parList;
@@ -461,9 +463,7 @@ public class AST {
     }
 
     // Empty Node Class
-    public static class EmptyNode extends Node {
-        // TODO.
-
+    public static class EmptyNode extends DecNode {
         @Override
         public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
             return visitor.visitNode(this);
@@ -472,12 +472,15 @@ public class AST {
 
     // Class Type Node Class
     public static class ClassTypeNode extends TypeNode {
-        // TODO.
-        final String id;
 
-        public ClassTypeNode(String id) {
-            this.id = id;
+        final ArrayList<ArrowTypeNode> allMethods;
+        final ArrayList<TypeNode> allFields;
+
+        public ClassTypeNode(ArrayList<ArrowTypeNode> allMethods, ArrayList<TypeNode> allFields) {
+            this.allMethods = allMethods;
+            this.allFields = allFields;
         }
+
 
         @Override
         public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
@@ -487,15 +490,10 @@ public class AST {
 
     // Method Type Node Class
     public static class MethodTypeNode extends TypeNode {
-        // TODO.
-        final String id;
-        final List<TypeNode> parList;
-        final TypeNode type;
+        final ArrowTypeNode fun;
 
-        public MethodTypeNode(String id, List<TypeNode> parList, TypeNode type) {
-            this.id = id;
-            this.parList = parList;
-            this.type = type;
+        public MethodTypeNode(ArrowTypeNode fun) {
+            this.fun = fun;
         }
 
         @Override
@@ -506,11 +504,10 @@ public class AST {
 
     // Ref Type Node Class
     public static class RefTypeNode extends TypeNode {
-        // TODO.
-        final TypeNode type;
+        final String id;
 
-        public RefTypeNode(TypeNode type) {
-            this.type = type;
+        public RefTypeNode(String id) {
+            this.id = id;
         }
 
         @Override
@@ -521,8 +518,6 @@ public class AST {
 
     // Empty Type Node Class
     public static class EmptyTypeNode extends TypeNode {
-        // TODO.
-
         @Override
         public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
             return visitor.visitNode(this);
