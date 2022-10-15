@@ -308,7 +308,7 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
         var n = new NewNode(ctx.ID().getText(), argList); // create new node
         n.setLine(ctx.ID().getSymbol().getLine()); // set line
 
-        return super.visitNew(ctx);
+        return n;
     }
 
     @Override
