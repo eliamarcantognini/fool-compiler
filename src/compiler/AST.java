@@ -430,6 +430,10 @@ public class AST {
         public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
             return visitor.visitNode(this);
         }
+
+        public void setType(MethodTypeNode methodType) {
+            this.type = methodType;
+        }
     }
 
     // Class Call Node Class
