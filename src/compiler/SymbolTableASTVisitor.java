@@ -291,7 +291,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
         nestingLevel++;
 
         // visit fields
-        var fieldOffset = - (classType.allFields.size()) - 1; // negative offset because fields starts from the bottom of the heap
+        var fieldOffset = -(classType.allFields.size()) - 1; // negative offset because fields starts from the bottom of the heap
         // for each field, add it to the class type and to the virtual table
         for (var field : n.fieldList) {
             // No visit needed.
@@ -314,7 +314,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
                         field.offset = prevOffset;
                         virtualTable.put(field.id, entry);
                         // preserve the offset, put the new field in the class type
-                        classType.allFields.set(-prevOffset-1,  field.getType());
+                        classType.allFields.set(-prevOffset - 1, field.getType());
                     }
                 } else {
                     // adding new field, no overriding
@@ -326,7 +326,47 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
             }
         }
 
+        // visit methods
+        var prevNLDecOffset = decOffset; // stores counter for offset of declarations at previous nesting level
+        // reset offset for declarations at current nesting level, because methods are stored in the heap
+        // the first method is at offset 0 and the last at offset size-1
+        decOffset = classType.allMethods.size();
+        for (var method : n.methodList) {
+            if (localDec.contains(method.id)) {
+                System.out.println("Method id " + method.id + " at line " + method.getLine() + " already declared");
+                stErrors++;
+            } else {
+                localDec.add(method.id);
+                visit(method); // virtual table is updated in the visit method
+                if (virtualTable.containsKey(method.id)) {
+                    // overriding
+                    if (virtualTable.get(method.id).type instanceof MethodTypeNode) {
+                        // overriding a method -> ok
+                        var prevOffset = virtualTable.get(method.id).offset;
+                        var entry = new STentry(nestingLevel, method.getType(), prevOffset);
+                        method.offset = prevOffset;
+                        virtualTable.put(method.id, entry);
+                        // preserve the offset, put the new method in the class type
+                        classType.allMethods.set(prevOffset, ((MethodTypeNode) method.getType()).fun);
+                    } else {
+                        // overriding a field -> error
+                        System.out.println("Field id " + method.id + " at line " + method.getLine() + " already declared");
+                        stErrors++;
+                    }
+                } else {
+                    // adding new method, no overriding
+                    var entry = new STentry(nestingLevel, method.getType(), decOffset);
+                    virtualTable.put(method.id, entry);
+                    method.offset = decOffset;
+                    decOffset++; // increment the offset because the last method is at the top of the heap
+                    classType.allMethods.add(((MethodTypeNode) method.getType()).fun);
+                }
+            }
+        }
 
+        // exit from the class scope
+        symTable.remove(nestingLevel--);
+        decOffset = prevNLDecOffset; // restore counter for offset of declarations at previous nesting level
 
         return null;
     }
@@ -362,7 +402,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
         // Exit the method scope and remove the symbol table
         symTable.remove(nestingLevel--);
         decOffset = prevNLDecOffset; // restores counter for offset of declarations at previous nesting level
-                return null;
+        return null;
     }
 
     @Override
