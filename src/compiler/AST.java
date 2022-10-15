@@ -41,7 +41,7 @@ public class AST {
 
     public static class FunNode extends DecNode {
         final String id;
-        final TypeNode retType;
+        TypeNode retType;
         final List<ParNode> parlist;
         final List<DecNode> declist;
         final Node exp;
@@ -54,7 +54,7 @@ public class AST {
             exp = e;
         }
 
-        //void setType(TypeNode t) {type = t;}
+        void setType(TypeNode t) {type = t;}
 
         @Override
         public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
