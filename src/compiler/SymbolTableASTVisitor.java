@@ -6,10 +6,7 @@ import compiler.lib.BaseASTVisitor;
 import compiler.lib.Node;
 import compiler.lib.TypeNode;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
 
@@ -246,10 +243,92 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
     public Void visitNode(ClassNode n) throws VoidException {
         if (print) printNode(n);
 
-        // TODO...
+        var localDec = new HashSet<String>();
+        // Symbol table
+        var hm = symTable.get(0);
+        // Virtual table
+        var virtualTable = new HashMap<String, STentry>();
+        ClassTypeNode classType = null;
+
+        // inheritance like written in slide 22 and so on
+        if (n.superId.isEmpty()) {
+            // not inherits
+            classType = new ClassTypeNode(new ArrayList<>(), new ArrayList<>());
+        } else {
+            // inherits
+            if (classTable.containsKey(n.superId)) {
+                // super class exists
+                n.superEntry = symTable.get(0).get(n.superId);
+                // create new content copying the super class, so that we can add new methods and fields without using references
+                var superType = (ClassTypeNode) n.superEntry.type;
+                var superMethods = new ArrayList<>(superType.allMethods);
+                var superFields = new ArrayList<>(superType.allFields);
+                classType = new ClassTypeNode(superMethods, superFields);
+                virtualTable = new HashMap<>(classTable.get(n.superId));
+            } else {
+                // super class does not exist
+                System.out.println("Super class " + n.superId + " at line " + n.getLine() + " not declared");
+                stErrors++;
+            }
+        }
+
+        // create the current STEntry
+        n.type = classType;
+        var currentEntry = new STentry(0, classType, decOffset--);
+
+        // Add entry symbol table at level 0
+        if (hm.put(n.id, currentEntry) != null) {
+            System.out.println("Class id " + n.id + " at line " + n.getLine() + " already declared");
+            stErrors++;
+        }
+
+        // add virtual table in the symbol table, slide 23
+        symTable.add(virtualTable);
+        // add class name in class table
+        classTable.put(n.id, virtualTable);
+
+        // enter in the class scope
+        nestingLevel++;
+
+        // visit fields
+        var fieldOffset = - (classType.allFields.size()) - 1; // negative offset because fields starts from the bottom of the heap
+        // for each field, add it to the class type and to the virtual table
+        for (var field : n.fieldList) {
+            // No visit needed.
+
+            if (localDec.contains(field.id)) {
+                System.out.println("Field id " + field.id + " at line " + field.getLine() + " already declared");
+                stErrors++;
+            } else {
+                localDec.add(field.id);
+                if (virtualTable.containsKey(field.id)) {
+                    // overriding
+                    if (virtualTable.get(field.id).type instanceof MethodTypeNode) {
+                        // overriding a method -> error
+                        System.out.println("Method id " + field.id + " at line " + field.getLine() + " already declared");
+                        stErrors++;
+                    } else {
+                        // overriding a field -> ok
+                        var prevOffset = virtualTable.get(field.id).offset;
+                        var entry = new STentry(nestingLevel, field.getType(), prevOffset);
+                        field.offset = prevOffset;
+                        virtualTable.put(field.id, entry);
+                        // preserve the offset, put the new field in the class type
+                        classType.allFields.set(-prevOffset-1,  field.getType());
+                    }
+                } else {
+                    // adding new field, no overriding
+                    var entry = new STentry(nestingLevel, field.getType(), fieldOffset);
+                    field.offset = fieldOffset;
+                    fieldOffset--; // decrement the offset because the last field is a the bottom of the heap
+                    classType.allFields.add(field.getType());
+                }
+            }
+        }
 
 
-        return super.visitNode(n);
+
+        return null;
     }
 
     @Override
