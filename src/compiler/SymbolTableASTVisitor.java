@@ -22,7 +22,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
     }
 
     SymbolTableASTVisitor(boolean debug) {
-        super(debug);
+        super(debug, true);
     } // enables print for debugging
 
     private STentry stLookup(String id) {
