@@ -63,6 +63,9 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
             System.out.println("Fun id " + n.id + " at line " + n.getLine() + " already declared");
             stErrors++;
         }
+
+        n.setType(new ArrowTypeNode(parTypes, n.retType));
+
         //creare una nuova hashmap per la symTable
         nestingLevel++;
         Map<String, STentry> hmn = new HashMap<>();
