@@ -319,6 +319,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
                 } else {
                     // adding new field, no overriding
                     var entry = new STentry(nestingLevel, field.getType(), fieldOffset);
+                    virtualTable.put(field.id, entry);
                     field.offset = fieldOffset;
                     fieldOffset--; // decrement the offset because the last field is a the bottom of the heap
                     classType.allFields.add(field.getType());
