@@ -277,8 +277,8 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode,TypeException
 
 	@Override
 	public TypeNode visitNode(EmptyNode n) throws TypeException {
-		// TODO.
-		return super.visitNode(n);
+		if (print) printNode(n);
+		return new EmptyTypeNode();
 	}
 
 	@Override
@@ -289,19 +289,14 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode,TypeException
 
 	@Override
 	public TypeNode visitNode(MethodTypeNode n) throws TypeException {
-		// TODO.
-		return super.visitNode(n);
+		if (print) printNode(n);
+		visit(n.fun);
+		return null;
 	}
 
 	@Override
 	public TypeNode visitNode(RefTypeNode n) throws TypeException {
-		// TODO.
-		return super.visitNode(n);
-	}
-
-	@Override
-	public TypeNode visitNode(EmptyTypeNode n) throws TypeException {
-		// TODO.
-		return super.visitNode(n);
+		if (print) printNode(n);
+		return null;
 	}
 }
