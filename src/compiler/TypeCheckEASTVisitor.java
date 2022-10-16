@@ -327,8 +327,21 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
 
     @Override
     public TypeNode visitNode(NewNode n) throws TypeException {
-        // TODO.
-        return super.visitNode(n);
+        if (print) printNode(n, n.id);
+        if (n.entry == null) throw new TypeException("Class " + n.id + " not declared. Invalid type.", n.getLine());
+
+        var classType = (ClassTypeNode) n.entry.type;
+        // Check if the constructor is called with the right number of parameters.
+        if (classType.allFields.size() != n.argList.size())
+            throw new TypeException("Wrong number of parameters in the invocation of " + n.id, n.getLine());
+
+        // Check if the parameters are of the right type.
+        for (int i = 0; i < n.argList.size(); i++) {
+            if (!isSubtype(visit(n.argList.get(i)), classType.allFields.get(i)))
+                throw new TypeException("Wrong type for " + (i + 1) + "-th parameter in the invocation of " + n.id, n.getLine());
+        }
+
+        return new RefTypeNode(n.id);
     }
 
     @Override
