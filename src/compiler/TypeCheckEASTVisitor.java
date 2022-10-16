@@ -277,8 +277,18 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
 
     @Override
     public TypeNode visitNode(MethodNode n) throws TypeException {
-        // TODO.
-        return super.visitNode(n);
+        if (print) printNode(n);
+        for (var dec: n.decList)
+            try {
+                visit(dec);
+            } catch (IncomplException e) {
+                System.out.println("Incomplete declaration at line " + dec.getLine());
+            } catch (TypeException e) {
+                System.out.println("Type checking error in a declaration: " + e.text);
+            }
+        if (!isSubtype(visit(n.exp), ckvisit(n.retType)))
+            throw new TypeException("Wrong return type in method " + n.id, n.getLine());
+        return null;
     }
 
     @Override
