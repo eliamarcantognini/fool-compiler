@@ -32,11 +32,12 @@ public class TypeRels {
         if ((a instanceof ArrowTypeNode fA) && (b instanceof ArrowTypeNode fB)) {
             // check if the return type of a is a subtype of the return type of b
             if (!isSubtype(fA.ret, fB.ret)) return false; // covariance of returns' type
-			// check if parlist of a is the same size of parlist of b
+            // check if parlist of a is the same size of parlist of b
             if (fA.parlist.size() != fB.parlist.size()) return false;
             // check if the parameters of a are subtypes of the parameters of b
             for (int i = 0; i < fA.parlist.size(); i++) {
-                if (!isSubtype(fA.parlist.get(i), fB.parlist.get(i))) return false; // contravariance of parameters' type
+                if (!isSubtype(fA.parlist.get(i), fB.parlist.get(i)))
+                    return false; // contravariance of parameters' type
             }
             return true;
         }
@@ -50,7 +51,8 @@ public class TypeRels {
         var superClass = a.id;
         // TODO. Check if it works correctly.
         // Roll up the inheritance tree until we find the class b or we reach the top of the tree
-        while (!superClass.isEmpty() && !superClass.equals(b.id)) superClass = superType.get(superClass);
+        while (!superClass.isEmpty() && !superClass.equals(b.id))
+            superClass = superType.get(superClass) == null ? "" : superType.get(superClass);
         return !superClass.isEmpty();
     }
 
