@@ -48,10 +48,10 @@ public class TypeRels {
 
     private static boolean isSuperClass(final RefTypeNode a, final RefTypeNode b) {
         var superClass = a.id;
-        // TODO. Check if it works correctly. Maybe has to use !superClass.isEmpty() 'cause superId is initialized with ""
+        // TODO. Check if it works correctly.
         // Roll up the inheritance tree until we find the class b or we reach the top of the tree
-        while (superClass != null && !superClass.equals(b.id)) superClass = superType.get(superClass);
-        return superClass != null;
+        while (!superClass.isEmpty() && !superClass.equals(b.id)) superClass = superType.get(superClass);
+        return !superClass.isEmpty();
     }
 
 }
