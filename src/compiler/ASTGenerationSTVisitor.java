@@ -324,7 +324,7 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
         if (print) printVarAndProdName(ctx);
         var argList = new ArrayList<Node>(); // list of arguments
         for (var arg : ctx.exp()) argList.add(visit(arg)); // visit each argument and populate list
-        // new ClassCallNode( objecID, methodID, arguments)
+        // new ClassCallNode(objectID, methodID, arguments)
         var n = new ClassCallNode(ctx.ID(0).getText(), ctx.ID(1).getText(), argList); // create new node
         n.setLine(ctx.ID(0).getSymbol().getLine()); // set line
         return n;
