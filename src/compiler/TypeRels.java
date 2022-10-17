@@ -44,14 +44,20 @@ public class TypeRels {
 
         // this remains the same
         // evaluate if a <= b, where a and b are primitive types (IntTypeNode or BoolTypeNode)
-        return a.getClass().equals(b.getClass()) || ((a instanceof BoolTypeNode) && (b instanceof IntTypeNode));
+//        if (a.getClass().equals(b.getClass()) || ((a instanceof BoolTypeNode) && (b instanceof IntTypeNode)))
+//            return true;
+        // Rewritten like this to avoid the use of getClass() which throws an exception if a or b is null
+        return ((a instanceof BoolTypeNode) && (b instanceof IntTypeNode))
+                || ((a instanceof IntTypeNode) && (b instanceof IntTypeNode))
+                || ((a instanceof BoolTypeNode) && (b instanceof BoolTypeNode));
     }
 
     private static boolean isSuperClass(final RefTypeNode a, final RefTypeNode b) {
         var superClass = a.id;
         // TODO. Check if it works correctly.
         // Roll up the inheritance tree until we find the class b or we reach the top of the tree
-        while (!superClass.isEmpty() && !superClass.equals(b.id))
+        System.out.println("TYPERELS: A: " + a.id + " B: " + b.id);
+        while (!superClass.isEmpty() && !b.id.equals(superClass))
             superClass = superType.get(superClass) == null ? "" : superType.get(superClass);
         return !superClass.isEmpty();
     }
