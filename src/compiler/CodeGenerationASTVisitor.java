@@ -376,10 +376,32 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
     }
 
     @Override
-    public String visitNode(ClassCallNode node) throws VoidException {
-        if (print) printNode(node);
-        // TODO.
-        return super.visitNode(node);
+    public String visitNode(ClassCallNode n) throws VoidException {
+        if (print) printNode(n, n.objectId + "." + n.methodId);
+
+        // same as CallNode
+       var argCode = "";
+       var getAR = "";
+        for (int i = n.arglist.size() - 1; i >= 0; i--)
+            argCode = nlJoin(argCode, visit(n.arglist.get(i)));
+        for (int i = 0; i < n.nl - n.entry.nl; i++)
+            getAR = nlJoin(getAR, "lw");
+        return nlJoin(
+                "lfp", // load Control Link (pointer to frame of function "id" caller)
+                argCode, // generate code for argument expressions in reversed order
+                "lfp", getAR, // retrieve address of frame containing "id" declaration
+                // by following the static chain (of Access Links)
+                // above is the same as call node, below is different
+                "push " + n.entry.offset, "add", // push offset of id1 declaration on stack and compute its address
+                "lw", // load address of id1 declaration
+                "stm", // set $tm to popped value (with the aim of duplicating top of stack)
+                "ltm", // load Access Link (pointer to frame of function "id" declaration)
+                "ltm", // duplicate top of stack
+                "lw", // load the address of the class's method // new one command for method
+                "push " + n.methodEntry.offset, "add", // push offset of id2 declaration on stack and compute its address
+                "lw", // load address of "id" function
+                "js"  // jump to popped address (saving address of subsequent instruction in $ra)
+        );
     }
 
     @Override
