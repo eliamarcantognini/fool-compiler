@@ -324,8 +324,41 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
     @Override
     public String visitNode(MethodNode n) throws VoidException {
         if (print) printNode(n);
-        // TODO.
-        return super.visitNode(n);
+        var declCode = "";
+        var popDecl = "";
+        var popParl = "";
+
+        for (var dec : n.declist) {
+            // create declarations code
+            declCode = nlJoin(declCode, visit(dec));
+            // for every declaration, add a pop to pop the value from the stack
+            popDecl = nlJoin(popDecl, "pop");
+        }
+        for (int i = 0; i < n.parlist.size(); i++) popParl = nlJoin(popParl, "pop");
+        var funl = freshFunLabel(); // generate label
+        n.label = funl; // set label to method node
+
+        // same as functions
+        putCode(
+                nlJoin(
+                        funl + ":",
+                        "cfp", // set $fp to $sp value
+                        "lra", // load $ra value
+                        declCode, // generate code for local declarations (they use the new $fp!!!)
+                        visit(n.exp), // generate code for function body expression
+                        "stm", // set $tm to popped value (function result)
+                        popDecl, // remove local declarations from stack
+                        "sra", // set $ra to popped value
+                        "pop", // remove Access Link from stack
+                        popParl, // remove parameters from stack
+                        "sfp", // set $fp to popped value (Control Link)
+                        "ltm", // load $tm value (function result)
+                        "lra", // load $ra value
+                        "js"  // jump to to popped address
+                )
+        );
+
+        return null; // Empty code. Ref to slide 38
     }
 
     @Override
