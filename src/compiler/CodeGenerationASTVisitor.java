@@ -4,6 +4,7 @@ import compiler.AST.*;
 import compiler.exc.VoidException;
 import compiler.lib.BaseASTVisitor;
 import compiler.lib.Node;
+import svm.ExecuteVM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -384,8 +385,37 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
     @Override
     public String visitNode(NewNode n) throws VoidException {
         if (print) printNode(n);
-        // TODO.
-        return super.visitNode(n);
+
+        // recall over all arguments to put them (for each arg) on the stack. Ref to slide 45
+        var args = "";
+        for (var arg : n.arglist) args = nlJoin(args, visit(arg));
+
+        var incrementHP = nlJoin(
+                "lhp", "push 1", // load $hp value and a 1 to add 1 to the stack
+                "add", // sum $hp and 1
+                "shp" // set $hp to popped value (the result of the sum)
+        );
+
+        // move each value from the stack to the heap. Ref to slide 45
+        for (var arg : n.arglist)
+            args = nlJoin(
+                    args,
+                    "lhp", // load $hp value
+                    "sw", // pop two values: the second one is written at the memory address pointed by hp
+                    incrementHP // increment $hp by 1
+            );
+
+        var address = ExecuteVM.MEMSIZE + n.entry.offset; // get the address of the class in the heap
+
+        return nlJoin(
+                args,
+                "push " + address, // push the address of the class in the heap to the stack
+                "lw", // put on the stack the value of $address (the class) from memory
+                "lhp", // load $hp value (the dispatch pointer address)
+                "sw", // store in $hp the dispatch pointer
+                "lhp", // load on stack the $hp value (the dispatch pointer address)
+                incrementHP // increment $hp by 1
+        );
     }
 
     @Override
