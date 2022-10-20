@@ -56,7 +56,6 @@ public class TypeRels {
         var superClass = a.id;
         // TODO. Check if it works correctly.
         // Roll up the inheritance tree until we find the class b or we reach the top of the tree
-        System.out.println("TYPERELS: A: " + a.id + " B: " + b.id);
         while (!superClass.isEmpty() && !b.id.equals(superClass))
             superClass = superType.get(superClass) == null ? "" : superType.get(superClass);
         return !superClass.isEmpty();
