@@ -345,8 +345,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
     @Override
     public String visitNode(EmptyNode n) throws VoidException {
         if (print) printNode(n);
-        // TODO.
-        return super.visitNode(n);
+        return "push -1"; // put on stack -1, none object pointer has this value. Ref to slide 42
     }
 
 
