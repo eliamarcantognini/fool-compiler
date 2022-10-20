@@ -294,7 +294,7 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
         Node n = null;
         if (ctx.ID().size() > 0){
             n = new MethodNode(ctx.ID(0).getText(), (TypeNode) visit(ctx.type(0)), parList, decList, visit(ctx.exp()));
-            n.setLine(ctx.ID(0).getSymbol().getLine());
+            n.setLine(ctx.FUN().getSymbol().getLine());
         }
         return n;
     }
