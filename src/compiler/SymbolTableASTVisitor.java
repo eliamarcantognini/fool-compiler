@@ -401,7 +401,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
                 stErrors++;
             }
         }
-        for (var dec : n.decList) visit(dec);
+        for (var dec : n.declist) visit(dec);
         visit(n.exp);
         // Exit the method scope and remove the symbol table
         symTable.remove(nestingLevel--);
@@ -452,7 +452,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
                 stErrors++;
             } else n.entry = classEntry;
         }
-        for (var arg : n.argList) visit(arg);
+        for (var arg : n.arglist) visit(arg);
         return null;
     }
 
