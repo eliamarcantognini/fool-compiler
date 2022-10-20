@@ -322,13 +322,6 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
     }
 
     @Override
-    public String visitNode(FieldNode node) throws VoidException {
-        if (print) printNode(node);
-        // TODO.
-        return super.visitNode(node);
-    }
-
-    @Override
     public String visitNode(MethodNode n) throws VoidException {
         if (print) printNode(n);
         // TODO.
@@ -355,4 +348,6 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
         // TODO.
         return super.visitNode(n);
     }
+
+
 }
