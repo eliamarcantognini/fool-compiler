@@ -382,7 +382,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
         var hm = symTable.get(nestingLevel);
         // Get parameters' types
         var parTypes = new ArrayList<TypeNode>();
-        for (var par : n.parList) parTypes.add(par.getType());
+        for (var par : n.parlist) parTypes.add(par.getType());
         // Set method type
         var methodType = new MethodTypeNode(new ArrowTypeNode(parTypes, n.retType));
         n.setType(methodType);
@@ -395,7 +395,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
         var prevNLDecOffset = decOffset; // store counter for offset of declarations at current nesting level
         var parOffset = 1;
         // Check if parameters are already declared
-        for (var par : n.parList) {
+        for (var par : n.parlist) {
             if (hmn.put(par.id, new STentry(nestingLevel, par.getType(), parOffset++)) != null) {
                 System.out.println("Par id " + par.id + " at line " + par.getLine() + " already declared");
                 stErrors++;

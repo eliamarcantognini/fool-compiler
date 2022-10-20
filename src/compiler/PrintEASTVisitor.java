@@ -223,7 +223,7 @@ public class PrintEASTVisitor extends BaseEASTVisitor<Void,VoidException> {
 	public Void visitNode(MethodNode n) throws VoidException {
 		printNode(n, n.id);
 		visit(n.retType);
-		for (var p : n.parList) visit(p);
+		for (var p : n.parlist) visit(p);
 		for (var d : n.declist) visit(d);
 		visit(n.exp);
 		return null;

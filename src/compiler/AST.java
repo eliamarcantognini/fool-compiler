@@ -412,16 +412,16 @@ public class AST {
     public static class MethodNode extends DecNode {
         final String id;
         final TypeNode retType; // return type
-        final List<ParNode> parList; // list of parameters
+        final List<ParNode> parlist; // list of parameters
         final List<DecNode> declist; // list of declarations
         final Node exp;
         int offset;
         String label;
 
-        public MethodNode(String id, TypeNode retType, List<ParNode> parList, List<DecNode> declist, Node exp) {
+        public MethodNode(String id, TypeNode retType, List<ParNode> parlist, List<DecNode> declist, Node exp) {
             this.id = id;
             this.retType = retType;
-            this.parList = Collections.unmodifiableList(parList);
+            this.parlist = Collections.unmodifiableList(parlist);
             this.declist = Collections.unmodifiableList(declist);
             this.exp = exp;
         }
