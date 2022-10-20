@@ -413,16 +413,16 @@ public class AST {
         final String id;
         final TypeNode retType; // return type
         final List<ParNode> parList; // list of parameters
-        final List<DecNode> decList; // list of declarations
+        final List<DecNode> declist; // list of declarations
         final Node exp;
         int offset;
         String label = "";
 
-        public MethodNode(String id, TypeNode retType, List<ParNode> parList, List<DecNode> decList, Node exp) {
+        public MethodNode(String id, TypeNode retType, List<ParNode> parList, List<DecNode> declist, Node exp) {
             this.id = id;
             this.retType = retType;
             this.parList = Collections.unmodifiableList(parList);
-            this.decList = Collections.unmodifiableList(decList);
+            this.declist = Collections.unmodifiableList(declist);
             this.exp = exp;
         }
 
@@ -442,16 +442,16 @@ public class AST {
         // call: ID1.ID2()
         final String objectId; // (ID1) - id of the class
         final String methodId; // (ID2) - id of the class method to be called
-        final List<Node> argList;
+        final List<Node> arglist;
 
         STentry entry; // the object entry (ID1)
         STentry methodEntry; // the method entry (ID2)
         int nl;
 
-        public ClassCallNode(String objectId, String methodId, List<Node> argList) {
+        public ClassCallNode(String objectId, String methodId, List<Node> arglist) {
             this.objectId = objectId;
             this.methodId = methodId;
-            this.argList = argList;
+            this.arglist = arglist;
         }
 
         @Override
@@ -463,12 +463,12 @@ public class AST {
     // New Node Class
     public static class NewNode extends Node {
         final String id;
-        final List<Node> argList;
+        final List<Node> arglist;
         STentry entry;
 
-        public NewNode(String id, List<Node> argList) {
+        public NewNode(String id, List<Node> arglist) {
             this.id = id;
-            this.argList = argList;
+            this.arglist = arglist;
         }
 
         @Override
