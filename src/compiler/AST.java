@@ -416,7 +416,7 @@ public class AST {
         final List<DecNode> declist; // list of declarations
         final Node exp;
         int offset;
-        String label = "";
+        String label;
 
         public MethodNode(String id, TypeNode retType, List<ParNode> parList, List<DecNode> declist, Node exp) {
             this.id = id;
