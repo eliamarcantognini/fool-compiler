@@ -384,7 +384,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
         var parTypes = new ArrayList<TypeNode>();
         for (var par : n.parList) parTypes.add(par.getType());
         // Set method type
-        var methodType = new MethodTypeNode(new ArrowTypeNode(parTypes, n.getType()));
+        var methodType = new MethodTypeNode(new ArrowTypeNode(parTypes, n.retType));
         n.setType(methodType);
 
         // Enter the method scope
