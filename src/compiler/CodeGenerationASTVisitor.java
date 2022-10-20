@@ -350,7 +350,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
         }
 
         dispatchTables.add(dispatchTable); // add dispatch table to the others
-        var dispatchTableCode = "";
+        String dispatchTableCode = null;
         for (var label : dispatchTable) {
             dispatchTableCode = nlJoin(
                     dispatchTableCode,
@@ -370,9 +370,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
     @Override
     public String visitNode(MethodNode n) throws VoidException {
         if (print) printNode(n);
-        var declCode = "";
-        var popDecl = "";
-        var popParl = "";
+        String declCode = null, popDecl = null, popParl = null;
 
         for (var dec : n.declist) {
             // create declarations code
@@ -381,13 +379,12 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
             popDecl = nlJoin(popDecl, "pop");
         }
         for (int i = 0; i < n.parlist.size(); i++) popParl = nlJoin(popParl, "pop");
-        var funl = freshFunLabel(); // generate label
-        n.label = funl; // set label to method node
+        n.label = freshFunLabel();  // generate label and set label to method node
 
         // same as functions
         putCode(
                 nlJoin(
-                        funl + ":",
+                        n.label + ":",
                         "cfp", // set $fp to $sp value
                         "lra", // load $ra value
                         declCode, // generate code for local declarations (they use the new $fp!!!)
@@ -412,8 +409,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
         if (print) printNode(n, n.objectId + "." + n.methodId);
 
         // same as CallNode
-        var argCode = "";
-        var getAR = "";
+        String argCode = null, getAR = null;
         for (int i = n.arglist.size() - 1; i >= 0; i--)
             argCode = nlJoin(argCode, visit(n.arglist.get(i)));
         for (int i = 0; i < n.nl - n.entry.nl; i++)
@@ -443,7 +439,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
         if (print) printNode(n);
 
         // recall over all arguments to put them (for each arg) on the stack. Ref to slide 45
-        var args = "";
+        String args = null;
         for (var arg : n.arglist) args = nlJoin(args, visit(arg));
 
         // move each value from the stack to the heap. Ref to slide 45
