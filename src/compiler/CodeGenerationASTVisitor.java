@@ -5,9 +5,14 @@ import compiler.exc.VoidException;
 import compiler.lib.BaseASTVisitor;
 import compiler.lib.Node;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static compiler.lib.FOOLlib.*;
 
 public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidException> {
+
+    List<List<String>> dispatchTable = new ArrayList<>();
 
     CodeGenerationASTVisitor() {
     }
