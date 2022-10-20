@@ -13,7 +13,7 @@ import static compiler.lib.FOOLlib.*;
 
 public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidException> {
 
-    List<List<String>> dispatchTable = new ArrayList<>();
+    List<List<String>> dispatchTables = new ArrayList<>();
 
     CodeGenerationASTVisitor() {
     }
@@ -331,8 +331,40 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
     @Override
     public String visitNode(ClassNode n) throws VoidException {
         if (print) printNode(n);
-        // TODO.
-        return super.visitNode(n);
+
+        var dispatchTable = new ArrayList<String>(); // No superclass -> empty dispatch table
+
+        // inherits -> copy superclass' dispatch table, offset ref to slide 40
+        if (!n.superId.isEmpty())
+            dispatchTable.addAll(dispatchTables.get(-n.superEntry.offset - 2)); // copy value and not its reference!!
+
+        // visit methods
+        for (var m : n.methodList) {
+            visit(m);
+            var label = m.label;
+            var offset = m.offset;
+            if (offset < dispatchTable.size()) // offset already passed -> override
+                dispatchTable.set(offset, label); // overriding
+            else
+                dispatchTable.add(label); // not overriding
+        }
+
+        dispatchTables.add(dispatchTable); // add dispatch table to the others
+        var dispatchTableCode = "";
+        for (var label : dispatchTable) {
+            dispatchTableCode = nlJoin(
+                    dispatchTableCode,
+                    "push " + label, // push on stack the method label (the address)
+                    "lhp", // loah $hp on stack
+                    "sw", // pop the two values and store the method label at the address pointed by $hp
+                    incrementHeapPointer() // increment $hp
+            );
+        }
+
+        return nlJoin(
+                "lhp", // load $hp on stack, the address of the dispatch pointer to return
+                dispatchTableCode // load the dispatch table on the heap
+        );
     }
 
     @Override
@@ -380,8 +412,8 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
         if (print) printNode(n, n.objectId + "." + n.methodId);
 
         // same as CallNode
-       var argCode = "";
-       var getAR = "";
+        var argCode = "";
+        var getAR = "";
         for (int i = n.arglist.size() - 1; i >= 0; i--)
             argCode = nlJoin(argCode, visit(n.arglist.get(i)));
         for (int i = 0; i < n.nl - n.entry.nl; i++)
@@ -412,19 +444,13 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
         var args = "";
         for (var arg : n.arglist) args = nlJoin(args, visit(arg));
 
-        var incrementHP = nlJoin(
-                "lhp", "push 1", // load $hp value and a 1 to add 1 to the stack
-                "add", // sum $hp and 1
-                "shp" // set $hp to popped value (the result of the sum)
-        );
-
         // move each value from the stack to the heap. Ref to slide 45
         for (var arg : n.arglist)
             args = nlJoin(
                     args,
                     "lhp", // load $hp value
                     "sw", // pop two values: the second one is written at the memory address pointed by hp
-                    incrementHP // increment $hp by 1
+                    incrementHeapPointer() // increment $hp by 1
             );
 
         var address = ExecuteVM.MEMSIZE + n.entry.offset; // get the address of the class in the heap
@@ -436,7 +462,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
                 "lhp", // load $hp value (the dispatch pointer address)
                 "sw", // store in $hp the dispatch pointer
                 "lhp", // load on stack the $hp value (the dispatch pointer address)
-                incrementHP // increment $hp by 1
+                incrementHeapPointer() // increment $hp by 1
         );
     }
 
@@ -444,6 +470,15 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
     public String visitNode(EmptyNode n) throws VoidException {
         if (print) printNode(n);
         return "push -1"; // put on stack -1, none object pointer has this value. Ref to slide 42
+    }
+
+    // Refactored method to increment heap pointer by one
+    private String incrementHeapPointer() {
+        return nlJoin(
+                "lhp", "push 1", // load $hp value and a 1 to add 1 to the stack
+                "add", // sum $hp and 1
+                "shp" // set $hp to popped value (the result of the sum)
+        );
     }
 
 
