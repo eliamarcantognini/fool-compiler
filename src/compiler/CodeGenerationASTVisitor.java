@@ -335,7 +335,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
         var dispatchTable = new ArrayList<String>(); // No superclass -> empty dispatch table
 
         // inherits -> copy superclass' dispatch table, offset ref to slide 40
-        if (!n.superId.isEmpty())
+        if (!(n.superId == null))
             dispatchTable.addAll(dispatchTables.get(-n.superEntry.offset - 2)); // copy value and not its reference!!
 
         // visit methods

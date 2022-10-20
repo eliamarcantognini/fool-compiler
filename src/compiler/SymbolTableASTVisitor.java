@@ -254,7 +254,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
         ClassTypeNode classType = null;
 
         // inheritance like written in slide 22 and so on
-        if (n.superId.isEmpty()) {
+        if (n.superId == null) {
             // not inherits, no superclass
             classType = new ClassTypeNode(new ArrayList<>(), new ArrayList<>());
         } else {

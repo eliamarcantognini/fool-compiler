@@ -256,8 +256,8 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
     @Override
     public TypeNode visitNode(ClassNode n) throws TypeException {
         // TODO.
-        if (print) printNode(n, n.id + ((!n.superId.isEmpty()) ? " extends " + n.superId : ""));
-        if (n.superId.isEmpty()) {
+        if (print) printNode(n, n.id + ((n.superId == null) ? "" :  " extends " + n.superId));
+        if (n.superId == null) {
             // No superclass.
             for (var m : n.methodList) visit(m);
         } else {

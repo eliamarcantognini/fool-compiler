@@ -252,7 +252,7 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 
         // if there is a superclass, start will be 2, otherwise 1
         int start = 1;
-        String superId = "";
+        String superId = null;
         // if there is a superclass, get the id of the superclass
         if (ctx.EXTENDS() != null) superId = ctx.ID(start++).getText();
 
