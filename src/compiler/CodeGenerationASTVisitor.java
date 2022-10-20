@@ -150,18 +150,31 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
         String argCode = null, getAR = null;
         for (int i = n.arglist.size() - 1; i >= 0; i--) argCode = nlJoin(argCode, visit(n.arglist.get(i)));
         for (int i = 0; i < n.nl - n.entry.nl; i++) getAR = nlJoin(getAR, "lw");
-        return nlJoin(
+        var code = nlJoin(
                 "lfp", // load Control Link (pointer to frame of function "id" caller)
                 argCode, // generate code for argument expressions in reversed order
                 "lfp", getAR, // retrieve address of frame containing "id" declaration
                 // by following the static chain (of Access Links)
                 "stm", // set $tm to popped value (with the aim of duplicating top of stack)
                 "ltm", // load Access Link (pointer to frame of function "id" declaration)
-                "ltm", // duplicate top of stack
-                "push " + n.entry.offset, "add", // compute address of "id" declaration
-                "lw", // load address of "id" function
-                "js"  // jump to popped address (saving address of subsequent instruction in $ra)
+                "ltm" // duplicate top of stack
         );
+
+        if (n.entry.type instanceof MethodTypeNode)
+            return nlJoin(
+                    code,
+                    "lw", // load the address of the class's method // new one command for method
+                    "push " + n.entry.offset, "add", // compute address of "id" declaration
+                    "lw", // load address of "id" function
+                    "js"  // jump to popped address (saving address of subsequent instruction in $ra)
+            );
+        else // no changes for functions
+            return nlJoin(
+                    code,
+                    "push " + n.entry.offset, "add", // compute address of "id" declaration
+                    "lw", // load address of "id" function
+                    "js"  // jump to popped address (saving address of subsequent instruction in $ra)
+            );
     }
 
     @Override
