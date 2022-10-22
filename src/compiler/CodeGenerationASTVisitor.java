@@ -274,10 +274,10 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
                 visit(n.exp),
                 "push 1",
                 "beq " + l1,
-                "push 0",
+                "push 1",
                 "b " + l2,
                 l1 + ":",
-                "push 1",
+                "push 0",
                 l2 + ":"
         ); // se l'exp è 0 push 1, altrimenti push 0
         // inverto il valore in quanto il not è 1 se l'exp è 0 e 0 se l'exp è 1
