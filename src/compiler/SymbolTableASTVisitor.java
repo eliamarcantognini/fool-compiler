@@ -435,7 +435,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
             }
         }
 
-        for (var arg: n.arglist) visit(arg);
+        for (var arg : n.arglist) visit(arg);
 
         return null;
     }
