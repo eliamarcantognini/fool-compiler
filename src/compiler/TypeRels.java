@@ -57,4 +57,32 @@ public class TypeRels {
         return !superClass.isEmpty();
     }
 
+    public static TypeNode getLowestCommonAncestor(final TypeNode a, final TypeNode b) {
+
+        // TODO. Bool and Int
+
+        // a is a class ref and b is null -> return a
+        if (a instanceof RefTypeNode && b instanceof EmptyTypeNode) return a;
+        // b is a class ref and a is null -> return b
+        if (a instanceof EmptyTypeNode && b instanceof RefTypeNode) return b;
+
+        if (a instanceof RefTypeNode cA && b instanceof RefTypeNode cB) {
+
+            var classA = cA.id;
+            var classB = cB.id;
+            if (classA.equals(classB)) return a; // if a and b are the same class -> return a
+
+            var superClassId = classA;
+            while (!superClassId.isEmpty()) {
+                superClassId = superType.get(classA) == null ? "" : superType.get(classA);
+                var superClass = new RefTypeNode(superClassId);
+                if (isSubtype(b, superClass)) return superClass;
+                classA = superClassId;
+            }
+
+        }
+
+        return null; // Every other case
+    }
+
 }
