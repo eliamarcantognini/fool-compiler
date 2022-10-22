@@ -335,7 +335,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
         var dispatchTable = new ArrayList<String>(); // No superclass -> empty dispatch table
 
         // inherits -> copy superclass' dispatch table, offset ref to slide 40
-        if (!(n.superId == null))
+        if (n.superId != null)
             dispatchTable.addAll(dispatchTables.get(-n.superEntry.offset - 2)); // copy value and not its reference!!
 
         // visit methods
@@ -343,10 +343,11 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
             visit(m);
             var label = m.label;
             var offset = m.offset;
+            // update dispatch table
             if (offset < dispatchTable.size()) // offset already passed -> override
                 dispatchTable.set(offset, label); // overriding
             else
-                dispatchTable.add(label); // not overriding
+                dispatchTable.add(offset, label); // not overriding
         }
 
         dispatchTables.add(dispatchTable); // add dispatch table to the others
@@ -378,7 +379,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
             // for every declaration, add a pop to pop the value from the stack
             popDecl = nlJoin(popDecl, "pop");
         }
-        for (int i = 0; i < n.parlist.size(); i++) popParl = nlJoin(popParl, "pop");
+        for (var p : n.parlist) popParl = nlJoin(popParl, "pop");
         n.label = freshFunLabel();  // generate label and set label to method node
 
         // same as functions
@@ -473,7 +474,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
     // Refactored method to increment heap pointer by one
     private String incrementHeapPointer() {
         return nlJoin(
-                "lhp", "push 1", // load $hp value and a 1 to add 1 to the stack
+                "lhp", "push 1", // load $hp value and push a 1 on the stack
                 "add", // sum $hp and 1
                 "shp" // set $hp to popped value (the result of the sum)
         );
