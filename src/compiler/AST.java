@@ -54,7 +54,9 @@ public class AST {
             exp = e;
         }
 
-        void setType(TypeNode t) {type = t;}
+        void setType(TypeNode t) {
+            type = t;
+        }
 
         @Override
         public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
@@ -490,8 +492,8 @@ public class AST {
         // It's a class type. It stores all the information about the class.
         // Including the fields' and methods' types (the intherited ones, too)
 
-        final ArrayList<ArrowTypeNode> allMethods; // all methods in the class
-        final ArrayList<TypeNode> allFields; // all fields in the class
+        final List<ArrowTypeNode> allMethods; // all methods in the class
+        final List<TypeNode> allFields; // all fields in the class
 
         public ClassTypeNode(ArrayList<ArrowTypeNode> allMethods, ArrayList<TypeNode> allFields) {
             this.allMethods = allMethods;
