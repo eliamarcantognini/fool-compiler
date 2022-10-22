@@ -58,8 +58,7 @@ public class TypeRels {
     }
 
     public static TypeNode getLowestCommonAncestor(final TypeNode a, final TypeNode b) {
-
-        // TODO. Bool and Int
+        // Refers to slide 51
 
         // a is a class ref and b is null -> return a
         if (a instanceof RefTypeNode && b instanceof EmptyTypeNode) return a;
@@ -79,8 +78,14 @@ public class TypeRels {
                 if (isSubtype(b, superClass)) return superClass;
                 classA = superClassId;
             }
-
         }
+
+        // a and b are primitive types
+        if (isSubtype(a, new IntTypeNode()) && isSubtype(b, new IntTypeNode()))
+            if (a instanceof IntTypeNode || b instanceof IntTypeNode) // if a or b is IntTypeNode -> return IntTypeNode
+                return new IntTypeNode();
+            else
+                return new BoolTypeNode();
 
         return null; // Every other case
     }
