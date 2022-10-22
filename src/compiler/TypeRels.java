@@ -14,8 +14,7 @@ public class TypeRels {
     public static boolean isSubtype(TypeNode a, TypeNode b) {
 
         // a is null and b is a class ref -> a is a subtype of b
-        if ((a instanceof EmptyTypeNode) && (b instanceof RefTypeNode))
-            return true;
+        if ((a instanceof EmptyTypeNode) && (b instanceof RefTypeNode)) return true;
 
         if (a instanceof RefTypeNode cA && b instanceof RefTypeNode cB) {
             // a is a class ref and b is a class ref
@@ -43,9 +42,11 @@ public class TypeRels {
 //        if (a.getClass().equals(b.getClass()) || ((a instanceof BoolTypeNode) && (b instanceof IntTypeNode)))
 //            return true;
         // Rewritten like this to avoid the use of getClass() which throws an exception if a or b is null
-        return ((a instanceof BoolTypeNode) && (b instanceof IntTypeNode))
+        return (
+                (a instanceof BoolTypeNode) && (b instanceof IntTypeNode))
                 || ((a instanceof IntTypeNode) && (b instanceof IntTypeNode))
-                || ((a instanceof BoolTypeNode) && (b instanceof BoolTypeNode));
+                || ((a instanceof BoolTypeNode) && (b instanceof BoolTypeNode)
+        );
     }
 
     private static boolean isSuperClass(final RefTypeNode a, final RefTypeNode b) {
@@ -66,7 +67,6 @@ public class TypeRels {
         if (a instanceof EmptyTypeNode && b instanceof RefTypeNode) return b;
 
         if (a instanceof RefTypeNode cA && b instanceof RefTypeNode cB) {
-
             var classA = cA.id;
             var classB = cB.id;
             if (classA.equals(classB)) return a; // if a and b are the same class -> return a
@@ -84,8 +84,7 @@ public class TypeRels {
         if (isSubtype(a, new IntTypeNode()) && isSubtype(b, new IntTypeNode()))
             if (a instanceof IntTypeNode || b instanceof IntTypeNode) // if a or b is IntTypeNode -> return IntTypeNode
                 return new IntTypeNode();
-            else
-                return new BoolTypeNode();
+            else return new BoolTypeNode();
 
         return null; // Every other case
     }
