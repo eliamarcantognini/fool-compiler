@@ -13,7 +13,7 @@ import visualsvm.*;
 public class Test {
     public static void main(String[] args) throws Exception {
    			
-    	String fileName = "quicksort.fool";
+    	String fileName = "bankloan.fool";
 
     	CharStream chars = CharStreams.fromFileName(fileName);
     	FOOLLexer lexer = new FOOLLexer(chars);
@@ -62,7 +62,7 @@ public class Test {
     	BufferedWriter out = new BufferedWriter(new FileWriter(fileName+".asm"));
     	out.write(code);
     	out.close();
-    	System.out.println("");
+    	System.out.println();
 
     	System.out.println("Assembling generated code.");
     	CharStream charsASM = CharStreams.fromFileName(fileName+".asm");
