@@ -356,7 +356,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
             dispatchTableCode = nlJoin(
                     dispatchTableCode,
                     "push " + label, // push on stack the method label (the address)
-                    "lhp", // loah $hp on stack
+                    "lhp", // load $hp on stack
                     "sw", // pop the two values and store the method label at the address pointed by $hp
                     incrementHeapPointer() // increment $hp
             );
@@ -471,7 +471,8 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
         return "push -1"; // put on stack -1, none object pointer has this value. Ref to slide 42
     }
 
-    // Refactored method to increment heap pointer by one
+    // Extracted method to increment heap pointer by one
+    // It's always the same code, so it's better to extract it
     private String incrementHeapPointer() {
         return nlJoin(
                 "lhp", "push 1", // load $hp value and push a 1 on the stack
