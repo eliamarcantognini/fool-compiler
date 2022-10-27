@@ -464,6 +464,8 @@ public class AST {
 
     // New Node Class
     public static class NewNode extends Node {
+        // new ID()
+        // represents the creation of a new object of class ID
         final String id;
         final List<Node> arglist;
         STentry entry;
@@ -541,6 +543,7 @@ public class AST {
 
     // Empty Type Node Class
     public static class EmptyTypeNode extends TypeNode {
+        // Used to represent the type of an empty node, null type
         @Override
         public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
             return visitor.visitNode(this);
