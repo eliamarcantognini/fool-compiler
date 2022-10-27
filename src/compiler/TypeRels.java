@@ -39,14 +39,13 @@ public class TypeRels {
 
         // this remains the same
         // evaluate if a <= b, where a and b are primitive types (IntTypeNode or BoolTypeNode)
-//        if (a.getClass().equals(b.getClass()) || ((a instanceof BoolTypeNode) && (b instanceof IntTypeNode)))
-//            return true;
-        // Rewritten like this to avoid the use of getClass() which throws an exception if a or b is null
-        return (
-                (a instanceof BoolTypeNode) && (b instanceof IntTypeNode))
-                || ((a instanceof IntTypeNode) && (b instanceof IntTypeNode))
-                || ((a instanceof BoolTypeNode) && (b instanceof BoolTypeNode)
-        );
+        return (a.getClass().equals(b.getClass()) || ((a instanceof BoolTypeNode) && (b instanceof IntTypeNode)));
+        // Rewrite like this to avoid the use of getClass() which throws an exception if a or b is null
+//        return (
+//                (a instanceof BoolTypeNode) && (b instanceof IntTypeNode))
+//                || ((a instanceof IntTypeNode) && (b instanceof IntTypeNode))
+//                || ((a instanceof BoolTypeNode) && (b instanceof BoolTypeNode)
+//        );
     }
 
     private static boolean isSuperClass(final RefTypeNode a, final RefTypeNode b) {
