@@ -379,7 +379,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
     public Void visitNode(MethodNode n) throws VoidException {
         // Similar to visitNode(FunNode n)
         if (print) printNode(n);
-        var hm = symTable.get(nestingLevel);
+//        var hm = symTable.get(nestingLevel);
         // Get parameters' types
         var parTypes = new ArrayList<TypeNode>();
         for (var par : n.parlist) parTypes.add(par.getType());
@@ -412,7 +412,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
     @Override
     public Void visitNode(ClassCallNode n) throws VoidException {
         if (print) printNode(n);
-        // Sintax: ID.ID()
+        // Syntax: ID.ID() -> objectID.methodID()
         var entry = stLookup(n.objectId); // object must be in the symbol table
         if (entry == null) {
             System.out.println("Object id " + n.objectId + " at line " + n.getLine() + " not declared");
@@ -443,7 +443,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
     @Override
     public Void visitNode(NewNode n) throws VoidException {
         if (print) printNode(n);
-        // Sintax: new ID()
+        // Syntax: new ID()
         // Control if the class to be instantiated has been declared
         if (!classTable.containsKey(n.id)) {
             System.out.println("Class " + n.id + " at line " + n.getLine() + " not declared");
