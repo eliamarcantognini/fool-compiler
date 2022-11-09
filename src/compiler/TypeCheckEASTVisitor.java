@@ -262,7 +262,6 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
 
     @Override
     public TypeNode visitNode(ClassNode n) throws TypeException {
-        // TODO.
         if (print) printNode(n, n.id + ((n.superId == null) ? "" :  " extends " + n.superId));
         if (n.superId == null) {
             // No superclass.
@@ -272,13 +271,15 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
             superType.put(n.id, n.superId); // Update the superType map with the superclass of this class.
 
             var classType = n.type;
-            var parentClassType = (ClassTypeNode) n.superEntry.type;
+            var parentClassType = (ClassTypeNode) n.superEntry.type; // ParentCT in slide 49.
 
             // Check over fields.
             for (var field : n.fieldList) {
+                // type checking optimization slide 49
                 var pos = -field.offset - 1;
                 if (pos < parentClassType.allFields.size()) {
                     // The field is already present in the superclass. Check if it is compatible. (It must be a subtype of the superclass field.)
+                    // Control done here only for optimization purposes.
                     if (!isSubtype(classType.allFields.get(pos), parentClassType.allFields.get(pos))) {
                         throw new TypeException("Field " + field.id + " has type " + field.getType() + " but it should be " + parentClassType.allFields.get(pos), n.getLine());
                     }
@@ -286,9 +287,11 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
             }
             // Check over methods.
             for (var method : n.methodList) {
+                // type checking optimization slide 49
                 var pos = method.offset;
                 if (pos < parentClassType.allMethods.size()) {
                     // The method is already present in the superclass. Check if the signatures are compatible. (They must be equal.)
+                    // Control done here only for optimization purposes.
                     if (!isSubtype(classType.allMethods.get(pos), parentClassType.allMethods.get(pos))) {
                         throw new TypeException("Method " + method.id + " has type " + method.getType() + " but it should be " + parentClassType.allMethods.get(pos), n.getLine());
                     }
