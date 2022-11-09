@@ -246,7 +246,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
     public Void visitNode(ClassNode n) throws VoidException {
         if (print) printNode(n);
 
-        var localDec = new HashSet<String>();
+        var localDec = new HashSet<String>(); // used for optimization
         // Symbol table
         var hm = symTable.get(0);
         // Virtual table
@@ -299,7 +299,8 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
         for (var field : n.fieldList) {
             // No visit needed.
 
-            if (localDec.contains(field.id)) {
+            if (localDec.contains(field.id)) { // already declared, error! (optimization)
+                // It was an override before, but now it's an error
                 System.out.println("Field id " + field.id + " at line " + field.getLine() + " already declared");
                 stErrors++;
             } else {
@@ -336,7 +337,8 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
         // the first method is at offset 0 and the last at offset size-1
         decOffset = classType.allMethods.size();
         for (var method : n.methodList) {
-            if (localDec.contains(method.id)) {
+            if (localDec.contains(method.id)) { // already declared, error! (optimization)
+                // It was an override before, but now it's an error
                 System.out.println("Method id " + method.id + " at line " + method.getLine() + " already declared");
                 stErrors++;
             } else {
