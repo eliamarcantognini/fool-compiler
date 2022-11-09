@@ -315,7 +315,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
                         // overriding a field -> ok
                         var prevOffset = virtualTable.get(field.id).offset;
                         var entry = new STentry(nestingLevel, field.getType(), prevOffset);
-                        field.offset = prevOffset;
+                        field.offset = prevOffset; // optimization: use the same offset of the STEntry
                         virtualTable.put(field.id, entry);
                         // preserve the offset, put the new field in the class type
                         classType.allFields.set(-prevOffset - 1, field.getType());
@@ -324,7 +324,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
                     // adding new field, no overriding
                     var entry = new STentry(nestingLevel, field.getType(), fieldOffset);
                     virtualTable.put(field.id, entry);
-                    field.offset = fieldOffset;
+                    field.offset = fieldOffset; // optimization: use the same offset of the STEntry
                     fieldOffset--; // decrement the offset because the last field is a the bottom of the heap
                     classType.allFields.add(field.getType());
                 }
