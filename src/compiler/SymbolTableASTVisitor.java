@@ -410,32 +410,32 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
     }
 
     @Override
-    public Void visitNode(ClassCallNode n) throws VoidException {
-        if (print) printNode(n);
+    public Void visitNode(ClassCallNode node) throws VoidException {
+        if (print) printNode(node);
         // Syntax: ID.ID() -> objectID.methodID()
-        var entry = stLookup(n.objectId); // object must be in the symbol table
+        var entry = stLookup(node.objectId); // object must be in the symbol table
         if (entry == null) {
-            System.out.println("Object id " + n.objectId + " at line " + n.getLine() + " not declared");
+            System.out.println("Object id " + node.objectId + " at line " + node.getLine() + " not declared");
             stErrors++;
         } else {
             if (entry.type instanceof RefTypeNode) {
                 var objectClassId = ((RefTypeNode) entry.type).id;
-                var methodEntry = classTable.get(objectClassId).get(n.methodId); // method must be in the class table
+                var methodEntry = classTable.get(objectClassId).get(node.methodId); // method must be in the class table
                 if (methodEntry == null) {
-                    System.out.println("Method id " + n.methodId + " at line " + n.getLine() + " not declared");
+                    System.out.println("Method id " + node.methodId + " at line " + node.getLine() + " not declared");
                     stErrors++;
                 } else {
-                    n.entry = entry;
-                    n.methodEntry = methodEntry;
-                    n.nl = nestingLevel;
+                    node.entry = entry;
+                    node.methodEntry = methodEntry;
+                    node.nl = nestingLevel;
                 }
             } else {
-                System.out.println("Object id " + n.objectId + " at line " + n.getLine() + " is not a class");
+                System.out.println("Object id " + node.objectId + " at line " + node.getLine() + " is not a class");
                 stErrors++;
             }
         }
 
-        for (var arg : n.arglist) visit(arg);
+        for (var arg : node.arglist) visit(arg);
 
         return null;
     }

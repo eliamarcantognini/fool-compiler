@@ -406,14 +406,14 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
     }
 
     @Override
-    public String visitNode(ClassCallNode n) throws VoidException {
-        if (print) printNode(n, n.objectId + "." + n.methodId);
+    public String visitNode(ClassCallNode node) throws VoidException {
+        if (print) printNode(node, node.objectId + "." + node.methodId);
 
         // same as CallNode
         String argCode = null, getAR = null;
-        for (int i = n.arglist.size() - 1; i >= 0; i--)
-            argCode = nlJoin(argCode, visit(n.arglist.get(i)));
-        for (int i = 0; i < n.nl - n.entry.nl; i++)
+        for (int i = node.arglist.size() - 1; i >= 0; i--)
+            argCode = nlJoin(argCode, visit(node.arglist.get(i)));
+        for (int i = 0; i < node.nl - node.entry.nl; i++)
             getAR = nlJoin(getAR, "lw");
         return nlJoin(
                 "lfp", // load Control Link (pointer to frame of function "id" caller)
@@ -422,14 +422,14 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
                 // by following the static chain (of Access Links)
                 // above is the same as call node, below is different
                 // ID1
-                "push " + n.entry.offset, "add", // push offset of id1 declaration on stack and compute its address
+                "push " + node.entry.offset, "add", // push offset of id1 declaration on stack and compute its address
                 "lw", // load address of id1 declaration
                 "stm", // set $tm to popped value (with the aim of duplicating top of stack)
                 "ltm", // load Access Link (pointer to frame of function "id" declaration)
                 "ltm", // duplicate top of stack
                 // ID2
                 "lw", // load the address of the class's method // new one command for method
-                "push " + n.methodEntry.offset, "add", // push offset of id2 declaration on stack and compute its address
+                "push " + node.methodEntry.offset, "add", // push offset of id2 declaration on stack and compute its address
                 "lw", // load address of "id" function
                 "js"  // jump to popped address (saving address of subsequent instruction in $ra)
         );

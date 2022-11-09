@@ -316,19 +316,19 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
     }
 
     @Override
-    public TypeNode visitNode(ClassCallNode n) throws TypeException {
+    public TypeNode visitNode(ClassCallNode node) throws TypeException {
         // Same as CallNode, but with a different error message.
-        if (print) printNode(n, n.objectId + "." + n.methodId);
-        if (n.methodEntry == null) return null;
-        TypeNode t = n.methodEntry.type;
+        if (print) printNode(node, node.objectId + "." + node.methodId);
+        if (node.methodEntry == null) return null;
+        TypeNode t = node.methodEntry.type;
         if (!(t instanceof MethodTypeNode))
-            throw new TypeException("Invocation of a non-function " + n.objectId + "." + n.methodId, n.getLine());
+            throw new TypeException("Invocation of a non-function " + node.objectId + "." + node.methodId, node.getLine());
         ArrowTypeNode fun = ((MethodTypeNode) t).fun;
-        if (!(fun.parlist.size() == n.arglist.size()))
-            throw new TypeException("Wrong number of parameters in the invocation of " + n.objectId + "." + n.methodId, n.getLine());
-        for (int i = 0; i < n.arglist.size(); i++)
-            if (!(isSubtype(visit(n.arglist.get(i)), fun.parlist.get(i))))
-                throw new TypeException("Wrong type for " + (i + 1) + "-th parameter in the invocation of " + n.objectId + "." + n.methodId, n.getLine());
+        if (!(fun.parlist.size() == node.arglist.size()))
+            throw new TypeException("Wrong number of parameters in the invocation of " + node.objectId + "." + node.methodId, node.getLine());
+        for (int i = 0; i < node.arglist.size(); i++)
+            if (!(isSubtype(visit(node.arglist.get(i)), fun.parlist.get(i))))
+                throw new TypeException("Wrong type for " + (i + 1) + "-th parameter in the invocation of " + node.objectId + "." + node.methodId, node.getLine());
         return fun.ret;
     }
 

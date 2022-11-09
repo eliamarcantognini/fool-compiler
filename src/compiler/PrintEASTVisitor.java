@@ -213,9 +213,9 @@ public class PrintEASTVisitor extends BaseEASTVisitor<Void,VoidException> {
 	}
 
 	@Override
-	public Void visitNode(FieldNode n) throws VoidException {
-		printNode(n, n.id);
-		visit(n.getType());
+	public Void visitNode(FieldNode node) throws VoidException {
+		printNode(node, node.id);
+		visit(node.getType());
 		return null;
 	}
 
@@ -230,10 +230,10 @@ public class PrintEASTVisitor extends BaseEASTVisitor<Void,VoidException> {
 	}
 
 	@Override
-	public Void visitNode(ClassCallNode n) throws VoidException {
-		printNode(n, n.objectId + "."+ n.methodId + " at nestinglevel " + n.nl);
-		visit(n.entry);
-		for (var a : n.arglist) visit(a);
+	public Void visitNode(ClassCallNode node) throws VoidException {
+		printNode(node, node.objectId + "."+ node.methodId + " at nestinglevel " + node.nl);
+		visit(node.entry);
+		for (var a : node.arglist) visit(a);
 		return null;
 	}
 
